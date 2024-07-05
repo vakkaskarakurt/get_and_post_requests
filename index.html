@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GET and POST Requests</title>
+</head>
+<body>
+    <h1>GET and POST Requests</h1>
+
+    <!-- GET Request Form -->
+    <h2>GET Request</h2>
+    <form id="getForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+        <button type="submit">Send GET Request</button>
+    </form>
+    <pre id="getResponse"></pre>
+
+    <!-- POST Request Form -->
+    <h2>POST Request</h2>
+    <form id="postForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+        <button type="submit">Send POST Request</button>
+    </form>
+    <pre id="postResponse"></pre>
+
+    <!-- JavaScript for handling requests -->
+    <script>
+        document.getElementById('getForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            fetch(`/get-data?name=${name}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('getResponse').textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    document.getElementById('getResponse').textContent = 'Error fetching data';
+                });
+        });
+
+        document.getElementById('postForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            fetch('/post-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('postResponse').textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error('Error posting data:', error);
+                    document.getElementById('postResponse').textContent = 'Error posting data';
+                });
+        });
+    </script>
+</body>
+</html>
